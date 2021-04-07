@@ -1,10 +1,10 @@
-import { degToRad } from '../libs/utils.js';
+import { degToRad } from '../../libs/utils.js';
 import TreeNode from './TreeNode.js';
 
 // Abstract class
 export default class Movable extends TreeNode {
-    constructor(sibling, child, position) {
-        super(sibling, child);
+    constructor(name, position) {
+        super(name);
         this.position = position;
         this.translation = [0, 0, 0];
         this.rotationX = [

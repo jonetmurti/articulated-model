@@ -1,8 +1,8 @@
 import Movable from './Movable.js';
 
 export default class Drawable extends Movable {
-    constructor(sibling, child, vertices, color, normals) {
-        super(sibling, child, null);
+    constructor(name, vertices, color, normals) {
+        super(name, null);
         this.vertices = vertices;
         this.color = color;
         this.normals = normals;
@@ -16,8 +16,6 @@ export default class Drawable extends Movable {
 
     render(gl, program) {
         const matrix = this.transform();
-
-        console.log(matrix);
 
         // TODO: consider normal and color
         let buffer = gl.createBuffer();

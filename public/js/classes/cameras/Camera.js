@@ -1,8 +1,8 @@
-import Movable from './Movable.js';
+import Movable from '../bases/Movable.js';
 
 export default class Camera extends Movable {
-    constructor() {
-        super(sibling, child, position);
+    constructor(name, position) {
+        super(name, position);
     }
 
     transform() {

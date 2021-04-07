@@ -5,3 +5,7 @@ export function multiplyMat(matA, matB) {
     */
 
 }
+
+export function transposeMat(mat) {
+
+}

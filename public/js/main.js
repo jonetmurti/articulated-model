@@ -7,6 +7,9 @@ import {
     screenWidth,
     screenHeight
 } from './const/canvas-const.js';
+import {
+    addSlider
+} from './libs/page.js';
 import Geometry from './classes/parts/Geometry.js';
 import Scene from './classes/Scene.js';
 import Camera from './classes/cameras/Camera.js';
@@ -31,26 +34,24 @@ function main(gl, ...programs) {
     // TODO: Init light
 
     // Init parts
-    var cube = new Geometry('cube', [0, 0, 0], CubeModel);
-    let transX = document.getElementById('obj-trans-x');
-    transX.addEventListener('input', function() {
-        cube.translateX(transX.value);
-        scene.render();
-    });
-    let transY = document.getElementById('obj-trans-y');
-    transY.addEventListener('input', function() {
-        cube.translateY(transY.value);
-        scene.render();
-    });
-    let transZ = document.getElementById('obj-trans-z');
-    transZ.addEventListener('input', function() {
-        cube.translateZ(transZ.value);
-        scene.render();
-    });
+    var cube1 = new Geometry('cube', [0, 0, 0], CubeModel);
+    addSlider('slider-table', cube1, scene);
+    var cube2 = new Geometry('cube', [0, 0, 0], CubeModel);
+    addSlider('slider-table', cube2, scene);
+    var cube3 = new Geometry('cube', [0, 0, 0], CubeModel);
+    addSlider('slider-table', cube3, scene);
+    var cube4 = new Geometry('cube', [0, 0, 0], CubeModel);
+    addSlider('slider-table', cube4, scene);
+    var cube5 = new Geometry('cube', [0, 0, 0], CubeModel);
+    addSlider('slider-table', cube5, scene);
 
     // Create tree
     scene.addChild(camera);
-    scene.addChild(cube);
+    scene.addChild(cube1);
+    scene.addChild(cube2);
+    scene.addChild(cube3);
+    scene.addChild(cube4);
+    scene.addChild(cube5);
 
     // Render
     scene.render();

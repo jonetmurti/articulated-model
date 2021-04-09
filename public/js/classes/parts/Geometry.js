@@ -5,6 +5,10 @@ export default class Geometry extends Drawable {
         super(name, vertices, color, normals);
     }
 
+    setDof(dof) {
+        this.dof = dof;
+    }
+
     transform() {
         return [
             1, 0, 0, 0,

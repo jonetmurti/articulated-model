@@ -2,9 +2,14 @@ import {
     initGL,
     initProgram,
     getFile
-} from './libs/utils.js'
+} from './libs/utils.js';
+import {
+    screenWidth,
+    screenHeight
+} from './const/screen-const.js'
 import Geometry from './classes/parts/Geometry.js';
 import Scene from './classes/Scene.js';
+import Camera from './classes/cameras/Camera.js';
 
 function main(gl, ...programs) {
     if (programs.length == 0)
@@ -14,6 +19,13 @@ function main(gl, ...programs) {
     var scene = new Scene('main', gl, programs[0]);
 
     // TODO: Init camera
+    var camera = new Camera('camera', [0, 0, 0]);
+    let camTranSlider = document.getElementById('cam-trans');
+    camTranSlider.addEventListener('input', function() {
+        camera.translateZ(camTranSlider.value);
+        scene.render();
+    });
+
 
     // TODO: Init light
 
@@ -31,6 +43,7 @@ function main(gl, ...programs) {
     ], null, null);
 
     // Create tree
+    scene.addChild(camera);
     scene.addChild(leftTriangle);
     scene.addChild(rightTriangle);
 
@@ -40,8 +53,8 @@ function main(gl, ...programs) {
 
 document.getElementsByTagName('body')[0].onload = async function() {
     var canvas = document.getElementById('gl-canvas');
-    canvas.width = 600;
-    canvas.height = 600;
+    canvas.width = screenWidth;
+    canvas.height = screenHeight;
 
     // Init gl
     var gl = initGL(canvas);

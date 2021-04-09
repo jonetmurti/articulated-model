@@ -18,6 +18,7 @@ export default class Scene extends TreeNode {
             return;
         
         // TODO: push matrix
+        node.transform();
         node.render(this.gl, this.program);
 
         if (node.child != null)

@@ -93,5 +93,5 @@ export let CubeModel = {
         -1, 0, 0
     ],
     colors: [],
-    dof: ['trans-x', 'trans-y', 'trans-z']
+    dof: ['trans']
 }

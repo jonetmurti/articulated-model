@@ -6,10 +6,11 @@ import {
 import {
     screenWidth,
     screenHeight
-} from './const/screen-const.js'
+} from './const/canvas-const.js';
 import Geometry from './classes/parts/Geometry.js';
 import Scene from './classes/Scene.js';
 import Camera from './classes/cameras/Camera.js';
+import { CubeModel } from './models/Cube.js';
 
 function main(gl, ...programs) {
     if (programs.length == 0)
@@ -30,22 +31,26 @@ function main(gl, ...programs) {
     // TODO: Init light
 
     // Init parts
-    var leftTriangle = new Geometry('triangle', [
-        -0.5, 0, 0,
-        0, 0, 0,
-        -0.5, 0.5, 0
-    ], null, null);
-
-    var rightTriangle = new Geometry('triangle', [
-        0.5, 0, 0,
-        0.5, 0.5, 0,
-        0, 0, 0
-    ], null, null);
+    var cube = new Geometry('cube', [0, 0, 0], CubeModel);
+    let transX = document.getElementById('obj-trans-x');
+    transX.addEventListener('input', function() {
+        cube.translateX(transX.value);
+        scene.render();
+    });
+    let transY = document.getElementById('obj-trans-y');
+    transY.addEventListener('input', function() {
+        cube.translateY(transY.value);
+        scene.render();
+    });
+    let transZ = document.getElementById('obj-trans-z');
+    transZ.addEventListener('input', function() {
+        cube.translateZ(transZ.value);
+        scene.render();
+    });
 
     // Create tree
     scene.addChild(camera);
-    scene.addChild(leftTriangle);
-    scene.addChild(rightTriangle);
+    scene.addChild(cube);
 
     // Render
     scene.render();

@@ -1,23 +1,59 @@
 import Movable from './Movable.js';
+import Transform from './Transform.js';
+import { 
+    transposeMat
+} from '../../libs/matrix.js';
 
 export default class Drawable extends Movable {
-    constructor(name, vertices, color, normals) {
-        super(name, null);
-        this.vertices = vertices;
-        this.color = color;
-        this.normals = normals;
+    constructor(name, position, model) {
+        super(name, position);
+        this.vertices = model.vertices;
+        this.color = model.color;
+        this.normals = model.normals;
+        this.dof = model.dof;
+        this.objectMat = new Transform();
 
         if (new.target === Drawable) {
             throw new TypeError("Cannot construct Drawable instances directly");
         }
     }
 
-    // transform: Abstract method
+    transform() {
+        this.objectMat.reset();
+        for (const motion of this.dof) {
+            switch (motion) {
+                case 'trans':
+                    this.objectMat.translate(this.translation);
+                    break;
+                
+                case 'rot-x':
+                    // TODO: this.objectMat.rotateX(this.rotation[0]);
+                    break;
+
+                case 'rot-y':
+                    // TODO: this.objectMat.rotateX(this.rotation[1]);
+                    break;
+
+                case 'rot-z':
+                    // TODO: this.objectMat.rotateX(this.rotation[2]);
+                    break;
+
+                case 'scale':
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+
+        this.objectMat.translate(this.position);
+        // TODO: transform with stack head
+    }
 
     render(gl, program) {
-        const matrix = this.transform();
+        const matrix = transposeMat(this.objectMat.matrix);
 
-        // TODO: consider normal and color
+        // TODO: consider normal, color, and texture?
         let buffer = gl.createBuffer();
         const positionLoc = gl.getAttribLocation(program, 'vertPos');
         const objMatLoc = gl.getUniformLocation(program, 'objMat');

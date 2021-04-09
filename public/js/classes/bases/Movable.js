@@ -1,5 +1,9 @@
 import { degToRad } from '../../libs/utils.js';
 import TreeNode from './TreeNode.js';
+import {
+    worldRange,
+    screenRange
+} from '../../const/canvas-const.js';
 
 // Abstract class
 export default class Movable extends TreeNode {
@@ -7,6 +11,9 @@ export default class Movable extends TreeNode {
         super(name);
         this.position = position;
         this.translation = [0, 0, 0];
+        this.rotation = [0, 0, 0];
+
+        // TODO: move implementation to Transform
         this.rotationX = [
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -36,20 +43,20 @@ export default class Movable extends TreeNode {
     // transform: Abstract method
 
     translateX(dx) {
-        this.translation[0] = dx;
+        this.translation[0] = dx / worldRange * screenRange;
     }
 
     translateY(dy) {
-        this.translation[1] = dy;
+        this.translation[1] = dy / worldRange * screenRange;
     }
 
     translateZ(dz) {
-        this.translation[2] = dz;
+        this.translation[2] = dz / worldRange * screenRange;
     }
 
     rotateX(deg) {
         const rad = degToRad(deg);
-        // TODO: update rotation matrix
+
         var c = Math.cos(rad);
         var s = Math.sin(rad);
         var mv1 = rotationX[1], mv5 = rotationX[5], mv9 = rotationX[9];
@@ -61,11 +68,13 @@ export default class Movable extends TreeNode {
         rotationX[2] = rotationX[2]*c+mv1*s;
         rotationX[6] = rotationX[6]*c+mv5*s;
         rotationX[10] = rotationX[10]*c+mv9*s;
+        
+        // TODO: move implementation to Transform
     }
 
     rotateY(deg) {
         const rad = degToRad(deg);
-        // TODO: update rotation matrix
+
         var c = Math.cos(rad);
         var s = Math.sin(rad);
         var mv0 = rotationY[0], mv4 = rotationY[4], mv8 = rotationY[8];
@@ -77,11 +86,13 @@ export default class Movable extends TreeNode {
         rotationY[2] = c*rotationY[2]-s*mv0;
         rotationY[6] = c*rotationY[6]-s*mv4;
         rotationY[10] = c*rotationY[10]-s*mv8;
+
+        // TODO: move implementation to Transform
     }
 
     rotateZ(deg) {
         const rad = degToRad(deg);
-        // TODO: update rotation matrix
+
         var c = Math.cos(rad);
         var s = Math.sin(rad);
         var mv0 = rotationZ[0], mv4 = rotationZ[4], mv8 = rotationZ[8]; 
@@ -92,5 +103,7 @@ export default class Movable extends TreeNode {
         rotationZ[1] = c*rotationZ[1]+s*mv0;
         rotationZ[5] = c*rotationZ[5]+s*mv4;
         rotationZ[9] = c*rotationZ[9]+s*mv8;
+
+        // TODO: move implementation to Transform
     }
 }

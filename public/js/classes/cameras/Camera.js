@@ -10,18 +10,22 @@ import {
     degToRad
 } from '../../libs/utils.js';
 import {
-    cameraScreenRange,
-    cameraWorldRange,
     farClip, 
     nearClip,
     fovY,
     aspect
-} from '../../const/camera-const.js';
+} from '../../const/canvas-const.js';
 
 export default class Camera extends Movable {
     constructor(name, position) {
         super(name, position);
         this.projection = this.perspective();
+        this.modelView = [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        ];
     }
 
     perspective() {
@@ -42,7 +46,7 @@ export default class Camera extends Movable {
         let up = [0, 1, 0];
 
         for (let i = 0; i < this.position.length; i++) {
-            this.position[i] = this.translation[i] / cameraWorldRange * cameraScreenRange;
+            this.position[i] = this.translation[i];
         }
 
         // TODO: Rotate camera
@@ -53,7 +57,7 @@ export default class Camera extends Movable {
 
         negate(xaxis);
 
-        return [
+        this.modelView = [
             xaxis[0], yaxis[0], zaxis[0], 0, 
             xaxis[1], yaxis[1], zaxis[1], 0,
             xaxis[2], yaxis[2], zaxis[2], 0,
@@ -62,12 +66,10 @@ export default class Camera extends Movable {
     }
 
     render(gl, program) {
-        const matrix = this.transform();
-
         const projectionLoc = gl.getUniformLocation(program, 'projection'); 
         const modelViewLoc = gl.getUniformLocation(program, 'modelView');
 
         gl.uniformMatrix4fv(projectionLoc, false, new Float32Array(this.projection));
-        gl.uniformMatrix4fv(modelViewLoc, false, new Float32Array(matrix));
+        gl.uniformMatrix4fv(modelViewLoc, false, new Float32Array(this.modelView));
     }
 }

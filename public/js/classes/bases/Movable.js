@@ -100,6 +100,7 @@ export default class Movable extends TreeNode {
         rotationZ[0] = c*rotationZ[0]-s*rotationZ[1];
         rotationZ[4] = c*rotationZ[4]-s*rotationZ[5];
         rotationZ[8] = c*rotationZ[8]-s*rotationZ[9];
+        
         rotationZ[1] = c*rotationZ[1]+s*mv0;
         rotationZ[5] = c*rotationZ[5]+s*mv4;
         rotationZ[9] = c*rotationZ[9]+s*mv8;

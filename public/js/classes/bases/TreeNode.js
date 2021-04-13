@@ -7,6 +7,7 @@ export default class TreeNode {
         this.child = null;
         this.name = name;
         this.id = TreeNode.nodeCount;
+        this.isActive = true;
         TreeNode.nodeCount++;
 
         if (new.target === TreeNode) {

@@ -10,10 +10,12 @@ import {
 import {
     addSlider
 } from './libs/page.js';
-import Geometry from './classes/parts/Geometry.js';
 import Scene from './classes/Scene.js';
 import Camera from './classes/cameras/Camera.js';
 import { CubeModel } from './models/Cube.js';
+import Limb from './classes/parts/Limb.js';
+
+var models = [CubeModel];
 
 function main(gl, ...programs) {
     if (programs.length == 0)
@@ -24,9 +26,10 @@ function main(gl, ...programs) {
 
     // TODO: Init camera
     var camera = new Camera('camera', [0, 0, 0]);
+    scene.addChild(camera);
     let camTranSlider = document.getElementById('cam-trans');
     camTranSlider.addEventListener('input', function() {
-        camera.translateZ(camTranSlider.value);
+        camera.setTransZ(camTranSlider.value);
         scene.render();
     });
 
@@ -34,24 +37,24 @@ function main(gl, ...programs) {
     // TODO: Init light
 
     // Init parts
-    var cube1 = new Geometry('cube', [0, 0, 0], CubeModel);
-    addSlider('slider-table', cube1, scene);
-    var cube2 = new Geometry('cube', [0, 0, 0], CubeModel);
-    addSlider('slider-table', cube2, scene);
-    var cube3 = new Geometry('cube', [0, 0, 0], CubeModel);
-    addSlider('slider-table', cube3, scene);
-    var cube4 = new Geometry('cube', [0, 0, 0], CubeModel);
-    addSlider('slider-table', cube4, scene);
-    var cube5 = new Geometry('cube', [0, 0, 0], CubeModel);
-    addSlider('slider-table', cube5, scene);
+    for (const model of models) {
+        // TODO: add isActive setter
+        let nodes = [];
+        for (let i = 0; i < model.parts.length; i++) {
+            let limb = new Limb(model.parts[i]);
+            nodes.push(limb);
+            addSlider('slider-table', limb, scene);
+            if (i == 0)
+                scene.addChild(limb);
+        }
 
-    // Create tree
-    scene.addChild(camera);
-    scene.addChild(cube1);
-    scene.addChild(cube2);
-    scene.addChild(cube3);
-    scene.addChild(cube4);
-    scene.addChild(cube5);
+        for (let i = 0; i < nodes.length; i++) {
+            if (model.parts[i].parentIdx != null) {
+                nodes[model.parts[i].parentIdx].addChild(nodes[i]);
+                nodes[i].setParentMat(nodes[model.parts[i].parentIdx].objectMat);
+            }
+        }
+    }
 
     // Render
     scene.render();

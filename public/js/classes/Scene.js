@@ -6,6 +6,7 @@ export default class Scene extends TreeNode {
         this.gl = gl;
         this.program = program;
         this.gl.useProgram(this.program);
+        this.stack = [];
     }
 
     changeProgram(program) {
@@ -14,17 +15,15 @@ export default class Scene extends TreeNode {
     }
 
     traverse(node) {
-        if (node == null)
+        if (node == null || !node.isActive)
             return;
         
-        // TODO: push matrix
         node.transform();
         node.render(this.gl, this.program);
 
         if (node.child != null)
             this.traverse(node.child);
         
-        // TODO: pop matrix
         if (node.sibling != null)
             this.traverse(node.sibling);
     }

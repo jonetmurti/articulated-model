@@ -5,21 +5,31 @@ import {
 } from '../../libs/matrix.js';
 
 export default class Drawable extends Movable {
-    constructor(name, position, model) {
-        super(name, position);
+    constructor(model) {
+        super(model.name, model.position);
         this.vertices = model.vertices;
         this.color = model.color;
         this.normals = model.normals;
         this.dof = model.dof;
+        this.pivot = model.pivot;
         this.objectMat = new Transform();
+        this.parentMat = null;
 
         if (new.target === Drawable) {
             throw new TypeError("Cannot construct Drawable instances directly");
         }
     }
 
+    setParentMat(parentMat) {
+        this.parentMat = parentMat;
+    }
+
     transform() {
         this.objectMat.reset();
+
+        if (this.pivot)
+            this.objectMat.translate(this.pivot, -1);
+
         for (const motion of this.dof) {
             switch (motion) {
                 case 'trans':
@@ -27,18 +37,19 @@ export default class Drawable extends Movable {
                     break;
                 
                 case 'rot-x':
-                    // TODO: this.objectMat.rotateX(this.rotation[0]);
+                    this.objectMat.rotateX(this.rotation[0]);
                     break;
 
                 case 'rot-y':
-                    // TODO: this.objectMat.rotateX(this.rotation[1]);
+                    this.objectMat.rotateY(this.rotation[1]);
                     break;
 
                 case 'rot-z':
-                    // TODO: this.objectMat.rotateX(this.rotation[2]);
+                    this.objectMat.rotateZ(this.rotation[2]);
                     break;
 
                 case 'scale':
+                    // this.objectMat.scale(k);
                     break;
                 
                 default:
@@ -46,8 +57,13 @@ export default class Drawable extends Movable {
             }
         }
 
+        if (this.pivot)
+            this.objectMat.translate(this.pivot);
+
         this.objectMat.translate(this.position);
-        // TODO: transform with stack head
+        if (this.parentMat) {
+            this.objectMat.multiply(this.parentMat);
+        }
     }
 
     render(gl, program) {
@@ -57,6 +73,7 @@ export default class Drawable extends Movable {
         let buffer = gl.createBuffer();
         const positionLoc = gl.getAttribLocation(program, 'vertPos');
         const objMatLoc = gl.getUniformLocation(program, 'objMat');
+        const colorLoc = gl.getUniformLocation(program, 'color');
 
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
@@ -71,6 +88,8 @@ export default class Drawable extends Movable {
         gl.enableVertexAttribArray(positionLoc);
 
         gl.uniformMatrix4fv(objMatLoc, false, new Float32Array(matrix));
+
+        gl.uniform3fv(colorLoc, new Float32Array(this.color));
 
         gl.drawArrays(gl.TRIANGLES, 0, this.vertices.length/3);
     }

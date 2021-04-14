@@ -13,6 +13,7 @@ import {
 import Scene from './classes/Scene.js';
 import Camera from './classes/cameras/Camera.js';
 import { CubeModel } from './models/Cube.js';
+import { Cannon } from './models/Cannon.js';
 import Limb from './classes/parts/Limb.js';
 
 var models = [CubeModel];

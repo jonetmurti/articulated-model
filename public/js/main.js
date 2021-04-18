@@ -14,9 +14,10 @@ import Scene from './classes/Scene.js';
 import Camera from './classes/cameras/Camera.js';
 import { CubeModel } from './models/Cube.js';
 import { Cannon } from './models/Cannon.js';
+import { JanusModel } from './models/Janus.js';
 import Limb from './classes/parts/Limb.js';
 
-var models = [CubeModel];
+var models = [JanusModel];
 
 function main(gl, ...programs) {
     if (programs.length == 0)
@@ -29,6 +30,7 @@ function main(gl, ...programs) {
     var camera = new Camera('camera', [0, 0, 0]);
     scene.addChild(camera);
     let camTranSlider = document.getElementById('cam-trans');
+    camera.setTransZ(camTranSlider.value);
     camTranSlider.addEventListener('input', function() {
         camera.setTransZ(camTranSlider.value);
         scene.render();

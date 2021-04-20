@@ -17,7 +17,7 @@ import { Cannon } from './models/Cannon.js';
 import { JanusModel } from './models/Janus.js';
 import Limb from './classes/parts/Limb.js';
 
-var models = [JanusModel];
+var models = [Cannon];
 
 function main(gl, ...programs) {
     if (programs.length == 0)
@@ -74,7 +74,9 @@ document.getElementsByTagName('body')[0].onload = async function() {
     try {
         const vert = await getFile('shaders/vertex.glsl');
         const frag = await getFile('shaders/fragment.glsl');
-        const program = initProgram(gl, vert, frag);
+        const ftext = await getFile('shaders/ftexture.glsl');
+        const vtext = await getFile('shaders/vtexture.glsl');
+        const program = initProgram(gl, vert, frag, vtext, ftext);
         main(gl, program);
     } catch(err) {
         console.error(err);

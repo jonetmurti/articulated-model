@@ -119,14 +119,14 @@ export default class Drawable extends Movable {
       }
       
 
-    render(gl, program) {
+    render(gl, program, textureOn) {
         const matrix = transposeMat(this.objectMat.matrix);
 
         // TODO: consider normal, color, and texture?
         let buffer = gl.createBuffer();
         let normalBuf = gl.createBuffer();
-        const positionLoc = gl.getAttribLocation(program, 'vertPos');
-        const vertNormalLoc = gl.getAttribLocation(program, 'vertNormal');
+
+        const positionLoc = gl.getAttribLocation(program, 'vertPos');        
         const objMatLoc = gl.getUniformLocation(program, 'objMat');
         const colorLoc = gl.getUniformLocation(program, 'color');
 
@@ -146,18 +146,22 @@ export default class Drawable extends Movable {
         );
         gl.enableVertexAttribArray(positionLoc);
 
-        // Vector normal stuff
-        gl.bindBuffer(gl.ARRAY_BUFFER, normalBuf);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normals), gl.STATIC_DRAW);
-        gl.vertexAttribPointer(
-            vertNormalLoc,
-            3,
-            gl.FLOAT,
-            gl.FALSE,
-            3 * Float32Array.BYTES_PER_ELEMENT,
-            0
-        );
-        gl.enableVertexAttribArray(vertNormalLoc);
+        if (textureOn) {
+            // Vector normal stuff
+            const vertNormalLoc = gl.getAttribLocation(program, 'vertNormal');
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, normalBuf);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normals), gl.STATIC_DRAW);
+            gl.vertexAttribPointer(
+                vertNormalLoc,
+                3,
+                gl.FLOAT,
+                gl.FALSE,
+                3 * Float32Array.BYTES_PER_ELEMENT,
+                0
+            );
+            gl.enableVertexAttribArray(vertNormalLoc);
+        }
 
         gl.uniformMatrix4fv(objMatLoc, false, new Float32Array(matrix));
 

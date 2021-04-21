@@ -24,10 +24,16 @@ var modelEnum = {
     'cannon': 0,
     'janus': 1
 }
+var programEnyum = {
+    'default': 0,
+    'light': 1
+}
 
 function main(gl, ...programs) {
     if (programs.length == 0)
         throw 'ERROR: No program provided';
+
+    let textureSwitch = document.getElementById('texture-switch');
 
     // Init scene
     var scene = new Scene('main', gl, programs[0]);
@@ -39,7 +45,7 @@ function main(gl, ...programs) {
     camera.setTransZ(camTranSlider.value);
     camTranSlider.addEventListener('input', function() {
         camera.setTransZ(camTranSlider.value);
-        scene.render();
+        scene.render(textureSwitch.checked);
     });
 
 
@@ -93,11 +99,23 @@ function main(gl, ...programs) {
             }
         }
 
-        scene.render();
+        scene.render(textureSwitch.checked);
+    });
+
+    textureSwitch.addEventListener('change', function() {
+        if (!this.checked) {
+            scene.changeProgram(programs[programEnyum['default']]);
+            light.isActive = false;
+        } else {
+            scene.changeProgram(programs[programEnyum['light']]);
+            light.isActive = true;
+        }
+
+        scene.render(this.checked);
     });
 
     // Render
-    scene.render();
+    scene.render(textureSwitch.checked);
 }
 
 document.getElementsByTagName('body')[0].onload = async function() {
@@ -109,14 +127,15 @@ document.getElementsByTagName('body')[0].onload = async function() {
     var gl = initGL(canvas);
 
     try {
-        // const vert = await getFile('shaders/vertex.glsl');
-        // const frag = await getFile('shaders/fragment.glsl');
+        const vert = await getFile('shaders/vertex.glsl');
+        const frag = await getFile('shaders/fragment.glsl');
         // const ftext = await getFile('shaders/ftexture.glsl');
         // const vtext = await getFile('shaders/vtexture.glsl');
         const lightVert = await getFile('shaders/vlight.glsl');
         const lightFrag = await getFile('shaders/flight.glsl');
-        const program = initProgram(gl, lightVert, lightFrag /*vert, frag, vtext, ftext*/);
-        main(gl, program);
+        const defaultProgram = initProgram(gl, vert, frag /*vert, frag, vtext, ftext*/);
+        const lightProgram = initProgram(gl, lightVert, lightFrag);
+        main(gl, defaultProgram, lightProgram);
     } catch(err) {
         console.error(err);
     }

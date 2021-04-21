@@ -47,7 +47,7 @@ function addTransSlider(table, object, type, scene) {
         input.id = ids[i];
         input.addEventListener('input', function() {
             object[func[i]](input.value);
-            scene.render();
+            scene.render(document.getElementById('texture-switch').checked);
         });
         cell2.appendChild(input);
         rows.push(row);
@@ -76,7 +76,7 @@ function addRotSlider(table, object, type, scene) {
     input.id = id;
     input.addEventListener('input', function() {
         object[typeMap[type]](input.value);
-        scene.render();
+        scene.render(document.getElementById('texture-switch').checked);
     });
     cell2.appendChild(input);
 

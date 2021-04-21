@@ -15,14 +15,17 @@ export default class Scene extends TreeNode {
     }
 
     traverse(node) {
-        if (node == null || !node.isActive)
+        if (node == null)
             return;
         
-        node.transform();
-        node.render(this.gl, this.program);
+        if (node.isActive) {
+            node.transform();
+            node.render(this.gl, this.program);
+        }
 
         if (node.child != null)
-            this.traverse(node.child);
+            if (node.isActive)
+                this.traverse(node.child);
         
         if (node.sibling != null)
             this.traverse(node.sibling);

@@ -8,7 +8,8 @@ import {
     screenHeight
 } from './const/canvas-const.js';
 import {
-    addSlider
+    addSlider,
+    setRowDisplay
 } from './libs/page.js';
 import Scene from './classes/Scene.js';
 import Camera from './classes/cameras/Camera.js';
@@ -18,7 +19,11 @@ import { Cannon } from './models/Cannon.js';
 import { JanusModel } from './models/Janus.js';
 import Limb from './classes/parts/Limb.js';
 
-var models = [Cannon];
+var models = [Cannon, JanusModel];
+var modelEnum = {
+    'cannon': 0,
+    'janus': 1
+}
 
 function main(gl, ...programs) {
     if (programs.length == 0)
@@ -43,16 +48,22 @@ function main(gl, ...programs) {
     scene.addChild(light);
 
     // Init parts
+    var objects = [];
+    var sliders = [];
     for (const model of models) {
         // TODO: add isActive setter
         let nodes = [];
+        let partSliders = [];
         for (let i = 0; i < model.parts.length; i++) {
             let limb = new Limb(model.parts[i]);
             nodes.push(limb);
-            addSlider('slider-table', limb, scene);
-            if (i == 0)
+            partSliders  = partSliders.concat(addSlider('slider-table', limb, scene));
+            if (i == 0) {
                 scene.addChild(limb);
+                objects.push(limb);
+            }
         }
+        sliders.push(partSliders);
 
         for (let i = 0; i < nodes.length; i++) {
             if (model.parts[i].parentIdx != null) {
@@ -61,6 +72,29 @@ function main(gl, ...programs) {
             }
         }
     }
+
+    for (let i = 1; i < models.length; i++) {
+        objects[i].isActive = false;     
+        setRowDisplay(sliders[i], 'none');   
+    }
+
+    // event listeners
+    let objectSelect = document.getElementById('object-select');
+    objectSelect.addEventListener('change', function() {
+        const idx = modelEnum[objectSelect.value];
+
+        objects[idx].isActive = true;
+        setRowDisplay(sliders[idx], '');
+        
+        for (let i = 0; i < models.length; i++) {
+            if (i != idx) {
+                objects[i].isActive = false;
+                setRowDisplay(sliders[i], 'none');
+            }
+        }
+
+        scene.render();
+    });
 
     // Render
     scene.render();

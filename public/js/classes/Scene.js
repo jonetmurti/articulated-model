@@ -1,3 +1,4 @@
+import Drawable from './bases/Drawable.js';
 import TreeNode from './bases/TreeNode.js';
 
 export default class Scene extends TreeNode {
@@ -14,21 +15,27 @@ export default class Scene extends TreeNode {
         this.gl.useProgram(this.program);
     }
 
-    traverse(node) {
-        if (node == null || !node.isActive)
+    traverse(node, textureOn) {
+        if (node == null)
             return;
         
-        node.transform();
-        node.render(this.gl, this.program);
+        if (node.isActive) {
+            node.transform();
+            if (node instanceof Drawable)
+                node.render(this.gl, this.program, textureOn);
+            else
+                node.render(this.gl, this.program);
+        }
 
         if (node.child != null)
-            this.traverse(node.child);
+            if (node.isActive)
+                this.traverse(node.child, textureOn);
         
         if (node.sibling != null)
-            this.traverse(node.sibling);
+            this.traverse(node.sibling, textureOn);
     }
 
-    render() {
+    render(textureOn) {
         this.gl.enable(this.gl.CULL_FACE);
 
         this.gl.enable(this.gl.DEPTH_TEST);
@@ -36,6 +43,6 @@ export default class Scene extends TreeNode {
 
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-        this.traverse(this.child);
+        this.traverse(this.child, textureOn);
     }
 }

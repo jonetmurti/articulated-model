@@ -9,6 +9,7 @@
     <!-- <script type="module" src="js/test.js"></script> -->
 </head>
 <body>
+    <img id='img-texture' src="img/acong.jpg" alt="" width="0" height="0">
     <canvas id="gl-canvas">
         Your browser does not support webgl
     </canvas>
@@ -21,29 +22,21 @@
                     <input type="range" min="-1000" max="0" value="-500" id="cam-trans">
                 </td>
             </tr>
-
-            <!-- <tr class="slider-input-container"></tr>
-                <td class="slider-label">Obj-trans-x:</td>
-                <td class="slider-col">
-                    <input type="range" min="-1000" max="1000" value="0" id="obj-trans-x">
-                </td>
-            </tr>
-
-            <tr class="slider-input-container"></tr>
-                <td class="slider-label">Obj-trans-y:</td>
-                <td class="slider-col">
-                    <input type="range" min="-1000" max="1000" value="0" id="obj-trans-y">
-                </td>
-            </tr>
-
-            <tr class="slider-input-container"></tr>
-                <td class="slider-label">Obj-trans-z:</td>
-                <td class="slider-col">
-                    <input type="range" min="-1000" max="1000" value="0" id="obj-trans-z">
-                </td>
-            </tr> -->
             
         </table>
+    </div>
+    <div id="object-div">
+
+        <select id="object-select">
+            <option value="cannon">Cannon</option>
+            <option value="janus">Janus</option>
+            <!-- <option value="unfinished">Unfinished</option> -->
+        </select>
+        <div>
+            <input id="texture-switch" name="texture-switch" type="checkbox">
+            <label for="texture-switch"> Texture Switch</label>
+        </div>
+
     </div>
 </body>
 </html>

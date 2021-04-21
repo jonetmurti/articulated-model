@@ -9,8 +9,14 @@
 }
 
 #slider-div {
-    width: 100%;
+    width: 25%;
     height: 100%;
     overflow: scroll;
     float: left;
-} 
+}
+
+#object-div {
+    width: 25%;
+    height: 100%;
+    float: right;
+}

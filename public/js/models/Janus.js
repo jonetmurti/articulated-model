@@ -10,7 +10,10 @@ export let JanusModel = {
         vertices: Cuboid.createVertices(2, 1, 1),
         normals: Cuboid.createNormals(),
         color: [1, 0.5, 0.3],
-        dof: ['rot-y', 'rot-x', 'rot-z', 'trans']
+        dof: ['rot-y', 'rot-x', 'rot-z', 'trans'],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -24,7 +27,10 @@ export let JanusModel = {
         color: [0.5, 1, 0.3],
         dof: ['rot-x', 'rot-z', 'rot-y'],
         parentIdx: 0,
-        pivot: [0, 1, 0]
+        pivot: [0, 1, 0],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -38,7 +44,10 @@ export let JanusModel = {
         color: [0.5, 1, 0.3],
         dof: ['rot-x', 'rot-z', 'rot-y'],
         parentIdx: 0,
-        pivot: [0, 1, 0]
+        pivot: [0, 1, 0],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -52,7 +61,10 @@ export let JanusModel = {
         color: [0.3, 0.5, 1],
         dof: ['rot-x'],
         parentIdx: 1,
-        pivot: [0, 1, 0]
+        pivot: [0, 1, 0],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -66,7 +78,10 @@ export let JanusModel = {
         color: [0.3, 0.5, 1],
         dof: ['rot-x'],
         parentIdx: 2,
-        pivot: [0, 1, 0]
+        pivot: [0, 1, 0],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -80,7 +95,10 @@ export let JanusModel = {
         color: [0, 0, 0],
         dof: ['rot-x'],
         parentIdx: 3,
-        pivot: [0, 0.1, 0.2]
+        pivot: [0, 0.1, 0.2],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -94,7 +112,10 @@ export let JanusModel = {
         color: [0, 0, 0],
         dof: ['rot-x'],
         parentIdx: 4,
-        pivot: [0, 0.1, 0.2]
+        pivot: [0, 0.1, 0.2],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -108,7 +129,10 @@ export let JanusModel = {
         color: [0.3, 0.5, 1],
         dof: ['rot-y'],
         parentIdx: 0,
-        pivot: [0, 0, 0]
+        pivot: [0, 0, 0],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -122,7 +146,10 @@ export let JanusModel = {
         color: [1, 0.5, 0.3],
         dof: ['rot-z', 'rot-x'],
         parentIdx: 7,
-        pivot: [-0.5, 0, 0]
+        pivot: [-0.5, 0, 0],
+        texture: {
+            on: false   
+        }
     }, {
         name: 'right-shoulder',
         position: [-1.75, 0.75, 0],
@@ -131,7 +158,10 @@ export let JanusModel = {
         color: [1, 0.5, 0.3],
         dof: ['rot-z', 'rot-x'],
         parentIdx: 7,
-        pivot: [0.5, 0, 0]
+        pivot: [0.5, 0, 0],
+        texture: {
+            on: false   
+        }
     }, {
         name: 'upper-left-arm',
         position: [0, -1.25, 0],
@@ -139,7 +169,10 @@ export let JanusModel = {
         normals: Cuboid.createNormals(),
         color: [0.5, 1, 0.3],
         dof: [],
-        parentIdx: 8
+        parentIdx: 8,
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -152,7 +185,10 @@ export let JanusModel = {
         normals: Cuboid.createNormals(),
         color: [0.5, 1, 0.3],
         dof: [],
-        parentIdx: 9
+        parentIdx: 9,
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -166,7 +202,10 @@ export let JanusModel = {
         color: [0.3, 0.5, 1],
         dof: ['rot-x'],
         parentIdx: 10,
-        pivot: [0, 0.9, 0]
+        pivot: [0, 0.9, 0],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -180,7 +219,10 @@ export let JanusModel = {
         color: [0.3, 0.5, 1],
         dof: ['rot-x'],
         parentIdx: 11,
-        pivot: [0, 0.9, 0]
+        pivot: [0, 0.9, 0],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -194,7 +236,10 @@ export let JanusModel = {
         color: [1, 0, 0],
         dof: ['rot-x', 'rot-y'],
         parentIdx: 7,
-        pivot: [0, -0.625, 0]
+        pivot: [0, -0.625, 0],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -208,6 +253,9 @@ export let JanusModel = {
         color: [1, 1, 0],
         dof: [],
         parentIdx: 14,
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -221,6 +269,9 @@ export let JanusModel = {
         color: [0.46, 0.46, 0.46],
         dof: [],
         parentIdx: 14,
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -234,6 +285,9 @@ export let JanusModel = {
         color: [0.46, 0.46, 0.46],
         dof: [],
         parentIdx: 14,
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -247,6 +301,9 @@ export let JanusModel = {
         color: [0, 0, 0],
         dof: [],
         parentIdx: 16,
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -260,6 +317,9 @@ export let JanusModel = {
         color: [0, 0, 0],
         dof: [],
         parentIdx: 17,
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null

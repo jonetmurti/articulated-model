@@ -12,7 +12,8 @@ export default class Drawable extends Movable {
         this.normals = model.normals;
         this.dof = model.dof;
         this.pivot = model.pivot;
-        this.img = model.img;  
+        this.img = model.img;
+        this.texture = model.texture;
         this.objectMat = new Transform();
         this.parentMat = null;
         if (new.target === Drawable) {
@@ -86,32 +87,37 @@ export default class Drawable extends Movable {
             const border = 0;
             const srcFormat = gl.RGB;
             const srcType = gl.UNSIGNED_BYTE;
-            const pixel = new Uint8Array(this.color);
-            gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                          width, height, border, srcFormat, srcType,
-                          pixel);
+
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
+                          gl.UNSIGNED_BYTE,
+                          document.getElementById('img-texture'));
           
-            const image = new Image();
-            image.onload = function() {
-              gl.bindTexture(gl.TEXTURE_2D, texture);
-              gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                            srcFormat, srcType, image);
+            // const image = new Image();
+            // image.onload = function() {
+            //   gl.bindTexture(gl.TEXTURE_2D, texture);
+            //   gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+            //                 srcFormat, srcType, image);
           
-              // WebGL1 has different requirements for power of 2 images
-              // vs non power of 2 images so check if the image is a
-              // power of 2 in both dimensions.
-              if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-                 // Yes, it's a power of 2. Generate mips.
-                 gl.generateMipmap(gl.TEXTURE_2D);
-              } else {
-                 // No, it's not a power of 2. Turn off mips and set
-                 // wrapping to clamp to edge
-                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-              }
-            };
-            image.src = url;
+            //   // WebGL1 has different requirements for power of 2 images
+            //   // vs non power of 2 images so check if the image is a
+            //   // power of 2 in both dimensions.
+            //   if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+            //      // Yes, it's a power of 2. Generate mips.
+            //      gl.generateMipmap(gl.TEXTURE_2D);
+            //   } else {
+            //      // No, it's not a power of 2. Turn off mips and set
+            //      // wrapping to clamp to edge
+            //      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            //      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            //      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            //   }
+            // };
+            // image.src = url;
           
             return texture;
         }
@@ -130,10 +136,6 @@ export default class Drawable extends Movable {
         const objMatLoc = gl.getUniformLocation(program, 'objMat');
         const colorLoc = gl.getUniformLocation(program, 'color');
 
-        // Texture stuff
-        const textureLoc = gl.getUniformLocation(program, 'aTextureCoord');
-        const uSampler = gl.getUniformLocation(program, 'uSampler');
-
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);   
         gl.vertexAttribPointer(
@@ -149,6 +151,7 @@ export default class Drawable extends Movable {
         if (textureOn) {
             // Vector normal stuff
             const vertNormalLoc = gl.getAttribLocation(program, 'vertNormal');
+            const textureOnLoc = gl.getUniformLocation(program, 'textureOn');
 
             gl.bindBuffer(gl.ARRAY_BUFFER, normalBuf);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normals), gl.STATIC_DRAW);
@@ -161,33 +164,60 @@ export default class Drawable extends Movable {
                 0
             );
             gl.enableVertexAttribArray(vertNormalLoc);
+
+            if (this.texture.on) {
+                gl.uniform1f(textureOnLoc, 1);
+
+                const texture = this.loadTexture(gl, this.texture.img);
+
+                // Texture stuff
+                let texBuffer = gl.createBuffer();
+                const texCoorLoc = gl.getAttribLocation(program, 'texCoor');
+
+                gl.bindBuffer(gl.ARRAY_BUFFER, texBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texture.uv), gl.STATIC_DRAW);
+
+                gl.vertexAttribPointer(
+                    texCoorLoc,
+                    2,
+                    gl.FLOAT,
+                    gl.FALSE,
+                    0,
+                    0
+                );
+                gl.enableVertexAttribArray(texCoorLoc);
+
+                gl.activeTexture(gl.TEXTURE0);
+            } else {
+                gl.uniform1f(textureOnLoc, 0);
+            }
         }
 
         gl.uniformMatrix4fv(objMatLoc, false, new Float32Array(matrix));
 
         gl.uniform3fv(colorLoc, new Float32Array(this.color));
 
-        if(this.img !== undefined){
-            const texture = this.loadTexture(gl,this.img);
+        // if(this.img !== undefined){
+        //     const texture = this.loadTexture(gl,this.img);
             
-            gl.vertexAttribPointer(
-                textureLoc,
-                3,
-                gl.FLOAT,
-                false,
-                0,
-                0
-            );
-            gl.enableVertexAttribArray(positionLoc);
-            // Tell WebGL we want to affect texture unit 0
-            gl.activeTexture(gl.TEXTURE0);
+        //     gl.vertexAttribPointer(
+        //         textureLoc,
+        //         3,
+        //         gl.FLOAT,
+        //         false,
+        //         0,
+        //         0
+        //     );
+        //     gl.enableVertexAttribArray(positionLoc);
+        //     // Tell WebGL we want to affect texture unit 0
+        //     gl.activeTexture(gl.TEXTURE0);
 
-            // Bind the texture to texture unit 0
-            gl.bindTexture(gl.TEXTURE_2D, texture);
+        //     // Bind the texture to texture unit 0
+        //     gl.bindTexture(gl.TEXTURE_2D, texture);
 
-            // Tell the shader we bound the texture to texture unit 0
-            gl.uniform1i(uSampler, 0);
-        }
+        //     // Tell the shader we bound the texture to texture unit 0
+        //     gl.uniform1i(uSampler, 0);
+        // }
         gl.drawArrays(gl.TRIANGLES, 0, this.vertices.length/3);
 
     }

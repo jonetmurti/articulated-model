@@ -9,7 +9,10 @@ export let Cannon = {
         vertices: Cuboid.createVertices(3, 0.25, 0.25),
         normals: Cuboid.createNormals(),
         color: [0, 1, 0],
-        dof: ['rot-y', 'rot-x', 'rot-z', 'trans']
+        dof: ['rot-y', 'rot-x', 'rot-z', 'trans'],
+        texture: {
+            on: false   
+        }
         // optional:
         /*
             parentIdx: null
@@ -18,12 +21,19 @@ export let Cannon = {
     }, {
         name: 'tube',
         position: [0, 0.6, -1],
-        vertices: HollowCube.createVertices(1, 6, 1),
-        normals: HollowCube.createNormals(),
+        // vertices: HollowCube.createVertices(1, 6, 1),
+        // normals: HollowCube.createNormals(),
+        vertices: Cuboid.createVertices(1, 6, 1),
+        normals: Cuboid.createNormals(),
         color: [0.5, 0, 1],
         dof: ['rot-x'],
         parentIdx: 0,
-        pivot: [0, 1, 1.35]
+        pivot: [0, 1, 1.35], 
+        texture: {
+            on: true,
+            uv: Cuboid.createUV(),
+            img: 'img-texture'
+        }
     }, {
         name: 'lwheel',
         position: [1, 0, 0],
@@ -32,7 +42,10 @@ export let Cannon = {
         color: [0.5, 0, 0.5],
         dof: ['rot-x'],
         parentIdx: 0,
-        pivot: [0, 0, 0]
+        pivot: [0, 0, 0], 
+        texture: {
+            on: false   
+        }
     }, {
         name: 'rwheel',
         position: [-1, 0, 0],
@@ -41,7 +54,10 @@ export let Cannon = {
         color: [0.5, 0, 0.5],
         dof: ['rot-x'],
         parentIdx: 0,
-        pivot: [0, 0, 0]
+        pivot: [0, 0, 0],
+        texture: {
+            on: false   
+        }
     }, {
         name: 'hatch',
         position: [0, 0, 3],
@@ -50,6 +66,9 @@ export let Cannon = {
         color: [0, 0, 1],
         dof: ['rot-y'],
         parentIdx: 1,
-        pivot: [0.4, 0, 0]
+        pivot: [0.4, 0, 0],
+        texture: {
+            on: false   
+        }
     }]
 };

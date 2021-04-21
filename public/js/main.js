@@ -24,9 +24,10 @@ var modelEnum = {
     'cannon': 0,
     'janus': 1
 }
-var programEnyum = {
+var programEnum = {
     'default': 0,
-    'light': 1
+    'cannon': 1,
+    'janus': 2
 }
 
 function main(gl, ...programs) {
@@ -99,15 +100,19 @@ function main(gl, ...programs) {
             }
         }
 
+        const progIdx = programEnum[document.getElementById('object-select').value];
+        scene.changeProgram(programs[progIdx]);
+
         scene.render(textureSwitch.checked);
     });
 
     textureSwitch.addEventListener('change', function() {
         if (!this.checked) {
-            scene.changeProgram(programs[programEnyum['default']]);
+            scene.changeProgram(programs[programEnum['default']]);
             light.isActive = false;
         } else {
-            scene.changeProgram(programs[programEnyum['light']]);
+            const idx = programEnum[document.getElementById('object-select').value];
+            scene.changeProgram(programs[idx]);
             light.isActive = true;
         }
 
@@ -129,13 +134,14 @@ document.getElementsByTagName('body')[0].onload = async function() {
     try {
         const vert = await getFile('shaders/vertex.glsl');
         const frag = await getFile('shaders/fragment.glsl');
-        // const ftext = await getFile('shaders/ftexture.glsl');
-        // const vtext = await getFile('shaders/vtexture.glsl');
+        const ftext = await getFile('shaders/ftexture.glsl');
+        const vtext = await getFile('shaders/vtexture.glsl');
         const lightVert = await getFile('shaders/vlight.glsl');
         const lightFrag = await getFile('shaders/flight.glsl');
         const defaultProgram = initProgram(gl, vert, frag /*vert, frag, vtext, ftext*/);
+        const imgtexProgram = initProgram(gl, vtext, ftext); 
         const lightProgram = initProgram(gl, lightVert, lightFrag);
-        main(gl, defaultProgram, lightProgram);
+        main(gl, defaultProgram, imgtexProgram, lightProgram);
     } catch(err) {
         console.error(err);
     }

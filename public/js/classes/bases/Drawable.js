@@ -124,24 +124,40 @@ export default class Drawable extends Movable {
 
         // TODO: consider normal, color, and texture?
         let buffer = gl.createBuffer();
+        let normalBuf = gl.createBuffer();
         const positionLoc = gl.getAttribLocation(program, 'vertPos');
+        const vertNormalLoc = gl.getAttribLocation(program, 'vertNormal');
         const objMatLoc = gl.getUniformLocation(program, 'objMat');
         const colorLoc = gl.getUniformLocation(program, 'color');
+
+        // Texture stuff
         const textureLoc = gl.getUniformLocation(program, 'aTextureCoord');
         const uSampler = gl.getUniformLocation(program, 'uSampler');
 
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
-        
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);   
         gl.vertexAttribPointer(
-            textureLoc,
+            positionLoc,
             3,
             gl.FLOAT,
             gl.FALSE,
-            0,
+            3 * Float32Array.BYTES_PER_ELEMENT,
             0
         );
         gl.enableVertexAttribArray(positionLoc);
+
+        // Vector normal stuff
+        gl.bindBuffer(gl.ARRAY_BUFFER, normalBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normals), gl.STATIC_DRAW);
+        gl.vertexAttribPointer(
+            vertNormalLoc,
+            3,
+            gl.FLOAT,
+            gl.FALSE,
+            3 * Float32Array.BYTES_PER_ELEMENT,
+            0
+        );
+        gl.enableVertexAttribArray(vertNormalLoc);
 
         gl.uniformMatrix4fv(objMatLoc, false, new Float32Array(matrix));
 

@@ -12,6 +12,7 @@ import {
 } from './libs/page.js';
 import Scene from './classes/Scene.js';
 import Camera from './classes/cameras/Camera.js';
+import BlinnPhong from './classes/lights/BlinnPhong.js';
 import { CubeModel } from './models/Cube.js';
 import { Cannon } from './models/Cannon.js';
 import { JanusModel } from './models/Janus.js';
@@ -26,7 +27,7 @@ function main(gl, ...programs) {
     // Init scene
     var scene = new Scene('main', gl, programs[0]);
 
-    // TODO: Init camera
+    // Init camera
     var camera = new Camera('camera', [0, 0, 0]);
     scene.addChild(camera);
     let camTranSlider = document.getElementById('cam-trans');
@@ -37,7 +38,9 @@ function main(gl, ...programs) {
     });
 
 
-    // TODO: Init light
+    // Init light
+    var light = new BlinnPhong('blinn-phong', [-1, 1, -1], camera);
+    scene.addChild(light);
 
     // Init parts
     for (const model of models) {
@@ -72,11 +75,13 @@ document.getElementsByTagName('body')[0].onload = async function() {
     var gl = initGL(canvas);
 
     try {
-        const vert = await getFile('shaders/vertex.glsl');
-        const frag = await getFile('shaders/fragment.glsl');
-        const ftext = await getFile('shaders/ftexture.glsl');
-        const vtext = await getFile('shaders/vtexture.glsl');
-        const program = initProgram(gl, vert, frag, vtext, ftext);
+        // const vert = await getFile('shaders/vertex.glsl');
+        // const frag = await getFile('shaders/fragment.glsl');
+        // const ftext = await getFile('shaders/ftexture.glsl');
+        // const vtext = await getFile('shaders/vtexture.glsl');
+        const lightVert = await getFile('shaders/vlight.glsl');
+        const lightFrag = await getFile('shaders/flight.glsl');
+        const program = initProgram(gl, lightVert, lightFrag /*vert, frag, vtext, ftext*/);
         main(gl, program);
     } catch(err) {
         console.error(err);
